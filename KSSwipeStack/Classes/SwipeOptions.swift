@@ -1,5 +1,5 @@
 //
-//  Constants.swift
+//  SwipeOptions.swift
 //  KSSwipeStack
 //
 //  Created by Simon Arneson on 2017-03-24.

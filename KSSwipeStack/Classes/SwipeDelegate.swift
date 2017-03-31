@@ -1,5 +1,4 @@
-//
-//  SwipeHandler.swift
+//  SwipeDelegate.swift
 //  KSSwipeStack
 //
 //  Created by Simon Arneson on 2017-03-24.

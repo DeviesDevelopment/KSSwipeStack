@@ -1,5 +1,5 @@
 //
-//  CardController.swift
+//  SwipeHelper.swift
 //  KSSwipeStack
 //
 //  Created by Simon Arneson on 2016-09-27.
