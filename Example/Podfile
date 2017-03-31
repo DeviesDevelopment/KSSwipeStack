@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'KSSwipeStack_Example' do
+  pod 'KSSwipeStack', :path => '../'
+
+  target 'KSSwipeStack_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

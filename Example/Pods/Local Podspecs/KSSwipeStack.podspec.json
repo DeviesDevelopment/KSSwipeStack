@@ -1,0 +1,27 @@
+{
+  "name": "KSSwipeStack",
+  "version": "0.1.0",
+  "summary": "A short description of KSSwipeStack.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/scanniza/KSSwipeStack",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "scanniza": "simon@cymonit.se"
+  },
+  "source": {
+    "git": "https://github.com/scanniza/KSSwipeStack.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "KSSwipeStack/Classes/**/*",
+  "dependencies": {
+    "RxSwift": [
+
+    ]
+  }
+}
