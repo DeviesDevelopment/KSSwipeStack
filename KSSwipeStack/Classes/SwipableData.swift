@@ -8,7 +8,12 @@
 
 import Foundation
 
-
+/**
+Protocol which must be implemented by all data models meant to be swiped in the card stack.
+ */
 public protocol SwipableData {
+    /**
+     - returns: The view to be rendered in the card stack representing this piece of data.
+     */
     func getView() -> SwipableView
 }

@@ -7,7 +7,9 @@
 //
 
 import Foundation
-
+/**
+ Representation of the swiping of a card in the stack
+ */
 public struct Swipe {
     var direction: SwipeDirection
     var data: SwipableData?
