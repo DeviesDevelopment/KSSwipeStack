@@ -6,7 +6,13 @@
 //
 
 import Foundation
-
+/**
+ Implement this protocol to observe swipes in the card stack.
+ */
 public protocol SwipeDelegate {
+    /**
+     Fires on every swipe in the stack
+     - parameter swipe: The swipe which just occured.
+     */
     func onNext(_ swipe: Swipe)
  }
