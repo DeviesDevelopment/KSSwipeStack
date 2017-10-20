@@ -43,16 +43,34 @@ pod "KSSwipeStack"
 ## Getting started
 
 ### Create a [SwipeView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeView.swift)
-[SwipeView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeView.swift#) is the container of the swipe stack. 
+[SwipeView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeView.swift) is the container of the swipe stack. 
 
-Add a [SwipeView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeView.swift) to your Storyboard/nib and create an outlet for it.
+1. Add a [SwipeView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeView.swift) to your Storyboard/nib and create an outlet for it.
 
-Run setup on said [SwipeView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeView.swift). The setup method takes a [SwipeOptions](https://github.com/Kicksort/KSSwiftStack#options) parameter which you can use to modify the behavior of the stack.
+2. Run setup on said [SwipeView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeView.swift), using one of the provided `setup` methods.  
+- The simplest form takes no arguments:
+```swift
+swipeView.setup()
+```
+_____
+- You can also use the setup method which takes a [SwipeOptions](#options) as argument in order to modify the behavior of the stack. See the [Options](#options) section for further details on how to use SwipeOptions.
 
 ```swift
-swipeView.setup(options: SwipeOptions(), swipeDelegate: nil)
-```
+var swipeOptions = SwipeOptions()
+swipeOptions.allowVerticalSwipes = true
 
+swipeView.setup(options: swipeOptions)
+```
+_____
+- Finally you can pass along a [SwipeDelegate](#using-swipedelegate) reference (if you don't want to use RxSwift), either by itself:
+```swift
+swipeView.setup(swipeDelegate: self)
+```
+_____
+- ...or together with some custom SwipeOptions:
+```swift
+swipeView.setup(swipeOptions: swipeOptions, swipeDelegate: self)
+```
 ### Create a custom class extending [SwipableView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipableView.swift)
 Styled to properly represent on item of your data. 
 
@@ -98,7 +116,7 @@ swipeView.getSwipes().subscribe(onNext: { (swipe) in
 }, onError: nil, onCompleted: nil, onDisposed: nil).addDisposableTo(disposableBag)
 ```
 
-You can also observe if the stack needs a refill based on the refill threshold provided in [SwipeOptions](https://github.com/Kicksort/KSSwiftStack#options).
+You can also observe if the stack needs a refill based on the refill threshold provided in [SwipeOptions](#options).
 ```swift
 swipeView.needsRefill().subscribe(onNext: { (swipe) in
     print("RX REFILL EVENT")
