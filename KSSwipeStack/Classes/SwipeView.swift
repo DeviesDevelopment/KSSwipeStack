@@ -13,7 +13,9 @@ import RxSwift
 /// The visual representation of a SwipeData object.
 public class SwipeView: UIView {
     private var swipeHelper = SwipeHelper()
-    private var horizontalPan: PanDirectionGestureRecognizer?
+    private lazy var horizontalPan = PanDirectionGestureRecognizer(direction: .Horizontal, target: self, action: #selector(respondToHorizontalPan))
+    private lazy var verticalPan = PanDirectionGestureRecognizer(direction: .Vertical, target: self, action: #selector(respondToVerticalPan))
+    
     fileprivate var dataset: [SwipableData] = []
     fileprivate var renderedCards: [SwipableView] = []
     fileprivate var previousCard: SwipableView?
@@ -23,21 +25,40 @@ public class SwipeView: UIView {
     fileprivate var swipeSubject: PublishSubject<Swipe>?
     fileprivate var refillSubject: PublishSubject<Swipe>?
     
-    public func setup(options: SwipeOptions?, swipeDelegate: SwipeDelegate?) {
-        if let swipeOptions = options {
-            self.options = swipeOptions
-            swipeHelper.options = swipeOptions
-        }
+    public func setup(swipeDelegate: SwipeDelegate?) {
+        setup(options: self.options, swipeDelegate: swipeDelegate)
+    }
+    
+    public func setup(options: SwipeOptions, swipeDelegate: SwipeDelegate?) {
+        self.options = options
+        swipeHelper.options = options
         
         if let swipeDelegate = swipeDelegate {
             self.swipeDelegate = swipeDelegate
         }
         
-        horizontalPan = PanDirectionGestureRecognizer(direction: .Horizontal, target: self, action: #selector(respondToHorizontalPan))
-        if let horizontalPan = horizontalPan {
+        setSwipeDirections(horizontal: options.allowHorizontalSwipes, vertical: options.allowVerticalSwipes)
+    }
+    
+    /**
+     Sets whether it should be possible to swipe cards horizontally and/or vertically.
+     - parameter horizontal: Set to true if the SwipeView should respond to horizontal swipes.
+     - parameter vertical: Set to true if the SwipeView should respond to vertical swipes.
+     */
+    public func setSwipeDirections(horizontal: Bool, vertical: Bool) {
+        if horizontal {
             addGestureRecognizer(horizontalPan)
+        } else {
+            removeGestureRecognizer(horizontalPan)
+        }
+    
+        if vertical {
+            addGestureRecognizer(verticalPan)
+        } else {
+            removeGestureRecognizer(verticalPan)
         }
     }
+    
     /**
      Adds a card to the stack and calls notifyDatasetUpdated to make sure it is rendered if needed.
      - parameter data: The data the new card represents.
@@ -46,6 +67,7 @@ public class SwipeView: UIView {
         dataset.append(data)
         notifyDatasetUpdated()
     }
+    
     /**
      Adds a card to the top of the stack and calls notifyDatasetUpdated to make sure it is rendered if needed.
      - parameter data: The data the new card represents.
@@ -68,6 +90,7 @@ public class SwipeView: UIView {
         swipeSubject = PublishSubject<Swipe>()
         return getSwipes()
     }
+    
     /**
      Get notifications when the card stack has reached the refillThreshold defined in SwipeOptions
      - returns: RxObservable firing with the swipe which put the stack below the refillThreshold
@@ -100,6 +123,7 @@ public class SwipeView: UIView {
             fillStack()
         }
     }
+    
     /**
      Fills the card stack by rendering new cards from the dataset if needed.
      */
@@ -110,6 +134,7 @@ public class SwipeView: UIView {
             fillStack()
         }
     }
+    
     /**
      Renders a Swipeble View onto the screen and puts it in the correct postion in the stack.
      - parameter view: The SwipeableView to render.
@@ -140,7 +165,7 @@ public class SwipeView: UIView {
         isUserInteractionEnabled = true
     }
     
-    /// Handles pan gestures (drags) in the view
+    /// Handles horizontal pan gestures (drags) in the view
     ///
     /// - Parameter gesture: the gesture itself
     @objc func respondToHorizontalPan(gesture: UIPanGestureRecognizer) {
@@ -181,6 +206,47 @@ public class SwipeView: UIView {
         }
     }
     
+    /// Handles vertical pan gestures (drags) in the view
+    ///
+    /// - Parameter gesture: the gesture itself
+    @objc func respondToVerticalPan(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: self)
+        let velocity = gesture.velocity(in: self)
+        let magnitude = swipeHelper.calculateThrowMagnitude(for: velocity)
+        
+        if let card = getCurrentCard(){
+            let previousOrigin = card.frame.origin
+            let nextOrigin = CGPoint(x: self.frame.origin.x + translation.x, y: self.frame.origin.y + translation.y)
+            card.center = CGPoint(x: options.screenSize.width/2 + translation.x, y: options.screenSize.height/2 + translation.y)
+            swipeHelper.transformCard(card)
+            
+            let opacity = abs(Float(card.center.y.distance(to: self.center.y).divided(by: options.screenSize.height.divided(by: 4))))
+            card.respondToSwipe(like: translation.y > 0, opacity: opacity)
+            
+            if gesture.state == .ended {
+                let throwingThresholdExceeded = magnitude > options.throwingThreshold
+                let panThresholdExceeded = abs(nextOrigin.y) > options.screenSize.height * options.verticalPanThreshold
+                if throwingThresholdExceeded {
+                    if velocity.y > 0 {
+                        respondToSwipe(.down, gesture: gesture)
+                    } else {
+                        respondToSwipe(.up, gesture: gesture)
+                    }
+                } else if panThresholdExceeded {
+                    if previousOrigin.y < options.visibleImageOrigin.y {
+                        respondToSwipe(.up, gesture: gesture)
+                    } else {
+                        respondToSwipe(.down, gesture: gesture)
+                    }
+                } else {
+                    snapBack()
+                }
+            } else if gesture.state == .cancelled {
+                snapBack()
+            }
+        }
+    }
+    
     /// Handles when a view is swiped in the view
     ///
     /// - Parameters:
@@ -194,7 +260,7 @@ public class SwipeView: UIView {
         
         previousCard = card.isUndoable() ? card : nil
         
-        dismissCard(toPoint: options.rightStackOrigin, gesture: gesture, completion: { [weak self] in
+        dismissCard(direction: direction, gesture: gesture, completion: { [weak self] in
             let swipe = Swipe(direction: direction, data: card.getData())
             if let swipeHandler = self?.swipeDelegate {
                 swipeHandler.onNext(swipe)
@@ -237,29 +303,17 @@ public class SwipeView: UIView {
     ///   - toPoint: destination of dismissal animation
     ///   - gesture: the gesture generating the dismissal
     ///   - completion: callback firing when the animation is completed and the view is dismissed.
-    fileprivate func dismissCard(toPoint: CGPoint, gesture: UIGestureRecognizer?, completion: @escaping () -> Void) {
+    fileprivate func dismissCard(direction: SwipeDirection, gesture: UIGestureRecognizer?, completion: @escaping () -> Void) {
         guard let card = getCurrentCard() else {
             return
         }
         
         isUserInteractionEnabled = !options.freezeWhenDismissing
         
-        var toPoint = swipeHelper.convertToCenter(origin: toPoint)
-        if !(card.frame.origin.x == 0 && card.frame.origin.y == 0) {
-            if card.center.x > options.screenSize.width / 2 {
-                toPoint = swipeHelper.calculateEndpoint(card)
-            } else if let gesture = gesture as? UIPanGestureRecognizer{
-                let velocity = gesture.velocity(in: self)
-                if !(velocity.x == 0 && velocity.y == 0) {
-                    toPoint = swipeHelper.calculateEndpoint(card, basedOn: velocity)
-                }
-            }
-        }
-        
+        let toPoint = swipeHelper.convertToCenter(origin: direction.getSwipeEndpoint())
         swipeHelper.moveFastAndTransform(card, toPoint: toPoint, completion: {
             completion()
             self.showNextCard()
         })
     }
-
 }

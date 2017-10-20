@@ -90,7 +90,7 @@ swipeView.addCard(ExampleData())
 ```
 
 ### Handle swipes
-### Using [RxSwift](https://github.com/ReactiveX/RxSwift)
+#### Using [RxSwift](https://github.com/ReactiveX/RxSwift)
 You can observe all swipe events coming from the stack using RxSwift by simply setting up an observer.
 ```swift
 swipeView.getSwipes().subscribe(onNext: { (swipe) in
@@ -105,7 +105,7 @@ swipeView.needsRefill().subscribe(onNext: { (swipe) in
 }, onError: nil, onCompleted: nil, onDisposed: nil).addDisposableTo(disposableBag)
 ```
 
-### Using [SwipeDelegate](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeDelegate.swift)
+#### Using [SwipeDelegate](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipeDelegate.swift)
 When setting up the SwipeView you can provide a Class implementing SwipeDelegate to handle the swipes received from the stack.
 ```swift
 
@@ -118,17 +118,18 @@ extension ViewController: SwipeDelegate {
 }
 ```
 
-### Options
+## Options
 Using the SwipeOptions struct you can modify the behavior ot the swipe stack.
 ```swift
 public struct SwipeOptions {
     let throwingThreshold = Float(800)
     let snapDuration = 0.1
+    let allowHorizontalSwipes = true
+    let allowVerticalSwipes = false
     let horizontalPanThreshold = CGFloat(0.5)
+    let verticalPanThreshold = CGFloat(0.5)
     let screenSize: CGSize = UIScreen.main.bounds.size
     let visibleImageOrigin = CGPoint(x: 0, y: 0)
-    let rightStackOrigin = CGPoint(x: UIScreen.main.bounds.size.width * 2, y: 0)
-    let leftStackOrigin = CGPoint(x: -UIScreen.main.bounds.size.width * 2, y: 0)
     let allowUndo = true
     var maxRenderedCards = 5
     var refillThreshold = 10
@@ -140,51 +141,51 @@ public struct SwipeOptions {
 ```
 Specifying how 'hard' you have to throw a card for it to be dismissed.
 ```swift
-let throwingThreshold = Float(800)
+public var throwingThreshold = Float(800)
 ```
 Duration of the snap-back animation
 ```swift
-let snapDuration = 0.1
+public var snapDuration = 0.1
+```
+Make the swipe stack respond to horizontal swipes.
+```swift
+public var allowHorizontalSwipe = true
+```
+Make the swipe stack respond to vertical swipes.
+```swift
+public var allowVerticalSwipe = false
 ```
 X-axis threshold for if a card is dismissed upon release.
 ```swift
-let horizontalPanThreshold = CGFloat(0.5)
+public var horizontalPanThreshold = CGFloat(0.5)
 ```
 Size of the view containing the SwipeView
 ```swift
-let screenSize: CGSize = UIScreen.main.bounds.size
+public var screenSize: CGSize = UIScreen.main.bounds.size
 ```
 Origin of a card in the 'original' state.
 ```swift
-let visibleImageOrigin = CGPoint(x: 0, y: 0)
-```
-Where dismissed cards visually end up if dismissed to the right.
-```swift
-let rightStackOrigin = CGPoint(x: UIScreen.main.bounds.size.width * 2, y: 0)
-```
-Where dismissed cards visually end up if dismissed to the left.
-```swift
-let leftStackOrigin = CGPoint(x: -UIScreen.main.bounds.size.width * 2, y: 0)
+public var visibleImageOrigin = CGPoint(x: 0, y: 0)
 ```
 Allow undoing of swipes.
 ```swift
-let allowUndo = true
+public var allowUndo = true
 ```
 How many cards should be rendered in the SwipeView at the same time.
 ```swift
-var maxRenderedCards = 5
+public var maxRenderedCards = 5
 ```
 Threshold of when a refill event is sent to refill subscribers.
 ```swift
-var refillThreshold = 10
+public var refillThreshold = 10
 ```
 Duration of the dismiss animation.
 ```swift
-var dismissAnimationDuration = 0.25
+public var dismissAnimationDuration = 0.25
 ```
 You can optionally choose to freeze the stack as a card is being dismissed to prevent the user from swiping 
 ```swift
-var freezeWhenDismissing = false
+public var freezeWhenDismissing = false
 ```
 
 ## Authors
