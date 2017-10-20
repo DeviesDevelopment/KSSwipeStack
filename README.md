@@ -122,19 +122,19 @@ extension ViewController: SwipeDelegate {
 Using the SwipeOptions struct you can modify the behavior ot the swipe stack.
 ```swift
 public struct SwipeOptions {
-    let throwingThreshold = Float(800)
-    let snapDuration = 0.1
-    let allowHorizontalSwipes = true
-    let allowVerticalSwipes = false
-    let horizontalPanThreshold = CGFloat(0.5)
-    let verticalPanThreshold = CGFloat(0.5)
-    let screenSize: CGSize = UIScreen.main.bounds.size
-    let visibleImageOrigin = CGPoint(x: 0, y: 0)
-    let allowUndo = true
-    var maxRenderedCards = 5
-    var refillThreshold = 10
-    var dismissAnimationDuration = 0.25
-    var freezeWhenDismissing = false
+    public var throwingThreshold = Float(800)
+    public var snapDuration = 0.1
+    public var allowHorizontalSwipes = true
+    public var allowVerticalSwipes = false
+    public var horizontalPanThreshold = CGFloat(0.5)
+    public var verticalPanThreshold = CGFloat(0.5)
+    public var screenSize: CGSize = UIScreen.main.bounds.size
+    public var visibleImageOrigin = CGPoint(x: 0, y: 0)
+    public var allowUndo = true
+    public var maxRenderedCards = 5
+    public var refillThreshold = 10
+    public var dismissAnimationDuration = 0.25
+    public var freezeWhenDismissing = false
     
     public init(){}
 }
