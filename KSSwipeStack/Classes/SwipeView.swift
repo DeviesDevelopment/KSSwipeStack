@@ -25,6 +25,14 @@ public class SwipeView: UIView {
     fileprivate var swipeSubject: PublishSubject<Swipe>?
     fileprivate var refillSubject: PublishSubject<Swipe>?
     
+    public func setup() {
+        setup(options: self.options, swipeDelegate: nil)
+    }
+    
+    public func setup(options: SwipeOptions) {
+        setup(options: options, swipeDelegate: nil)
+    }
+    
     public func setup(swipeDelegate: SwipeDelegate?) {
         setup(options: self.options, swipeDelegate: swipeDelegate)
     }
