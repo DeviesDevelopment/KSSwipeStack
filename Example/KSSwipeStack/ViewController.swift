@@ -30,11 +30,11 @@ class ViewController: UIViewController {
         }
         
         // (Optional) Subscribes to events fired by the swipe view using RxObservables
-        swipeView.getSwipes().subscribe(onNext: { (swipe) in
-            print("RX SWIPE EVENT")
+        swipeView.getSwipes().subscribe(onNext: { swipe in
+            print("RX SWIPE EVENT: \(swipe.direction)")
         }, onError: nil, onCompleted: nil, onDisposed: nil).addDisposableTo(disposableBag)
         
-        swipeView.needsRefill().subscribe(onNext: { (swipe) in
+        swipeView.needsRefill().subscribe(onNext: { swipe in
             print("RX REFILL EVENT")
         }, onError: nil, onCompleted: nil, onDisposed: nil).addDisposableTo(disposableBag)
         
