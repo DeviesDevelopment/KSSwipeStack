@@ -22,8 +22,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Sets up the SwipeView (the container for the stack) using default options and (Optional) adds this class as a delegate to handle events
-        swipeView.setup(options: SwipeOptions(), swipeDelegate: self)
+        // (Optional step) create a SwipeOptions object and customize any settings you want
+        var swipeOptions = SwipeOptions()
+        swipeOptions.allowVerticalSwipes = true
+        
+        // Sets up the SwipeView (the container for the stack) using SwipeOptions object and (Optional step) adds this class as a delegate to handle events
+        swipeView.setup(options: swipeOptions, swipeDelegate: self)
         
         for _ in 1...15 {
             swipeView.addCard(ExampleData())
