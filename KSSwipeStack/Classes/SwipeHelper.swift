@@ -159,6 +159,30 @@ class SwipeHelper {
         return Double(abs(cardCenter.y - self.screenSize.height / 2))
     }
     
+    /// Calculate a proper destination for a dismissal of a view based on its position
+    /// Places the view far to the left if the view is to the left the the center of the screen and vice versa.
+    /// - Parameter card: View which endpoint to calculate
+    /// - Returns: Proper destination for the view
+    func calculateEndpoint(_ card: UIView) -> CGPoint {
+        let deltaX = card.center.x - screenSize.width / 2
+        let deltaY = card.center.y - screenSize.height / 2
+        
+        let k = deltaY / deltaX
+        let toX = deltaX < 0 ? -screenSize.height / 2 : screenSize.width + screenSize.height / 2
+        return CGPoint(x: toX, y: toX * k)
+    }
+    
+    /// Calculate a proper destination for a dismissal of a view based on current velocity
+    /// Places the view far to the left if the view is currently moving to the left and vice versa.
+    /// The angle from the center to the proposed destination of the view is based on the angle of the velocity vector
+    /// - Parameter card: View which endpoint to calculate
+    /// - Returns: Proper destination for the view
+    func calculateEndpoint(_ card: UIView, basedOn velocity: CGPoint) -> CGPoint {
+        let k = velocity.y / velocity.x
+        let toX = velocity.x < 0 ? -screenSize.height / 2 : screenSize.width + screenSize.height / 2
+        return CGPoint(x: toX, y: toX * k)
+    }
+    
     /// Converts a position with coordinates with the origin of the screen as origo to one using the center of the screen as origo.
     /// Can be used to convert a origin value to a center value refering to the same positioning of a full screen view.
     /// - Parameter center: Position using origin as origo

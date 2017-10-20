@@ -318,7 +318,22 @@ public class SwipeView: UIView {
         
         isUserInteractionEnabled = !options.freezeWhenDismissing
         
-        let toPoint = swipeHelper.convertToCenter(origin: direction.getSwipeEndpoint())
+        var toPoint = swipeHelper.convertToCenter(origin: direction.getSwipeEndpoint())
+        
+        if options.allowHorizontalSwipes && !options.allowVerticalSwipes {
+            // Special case to better handle rapid flicks
+            if !(card.frame.origin.x == 0 && card.frame.origin.y == 0) {
+                if card.center.x > options.screenSize.width / 2 {
+                    toPoint = swipeHelper.calculateEndpoint(card)
+                } else if let gesture = gesture as? UIPanGestureRecognizer{
+                    let velocity = gesture.velocity(in: self)
+                    if !(velocity.x == 0 && velocity.y == 0) {
+                        toPoint = swipeHelper.calculateEndpoint(card, basedOn: velocity)
+                    }
+                }
+            }
+        }
+        
         swipeHelper.moveFastAndTransform(card, toPoint: toPoint, completion: {
             completion()
             self.showNextCard()
