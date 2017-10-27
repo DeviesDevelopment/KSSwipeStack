@@ -187,7 +187,7 @@ public class SwipeView: UIView {
             card.center = CGPoint(x: options.screenSize.width/2 + translation.x, y: options.screenSize.height/2 + translation.y)
             swipeHelper.transformCard(card)
             
-            let opacity = abs(Float(card.center.x.distance(to: self.center.x).divided(by: options.screenSize.width.divided(by: 4))))
+            let opacity = abs(Float(card.center.x.distance(to: self.center.x) / (options.screenSize.width / 4)))
             card.respondToSwipe(like: translation.x > 0, opacity: opacity)
             
             if gesture.state == .ended {
@@ -228,7 +228,7 @@ public class SwipeView: UIView {
             card.center = CGPoint(x: options.screenSize.width/2 + translation.x, y: options.screenSize.height/2 + translation.y)
             swipeHelper.transformCard(card)
             
-            let opacity = abs(Float(card.center.y.distance(to: self.center.y).divided(by: options.screenSize.height.divided(by: 4))))
+            let opacity = abs(Float(card.center.y.distance(to: self.center.y) / (options.screenSize.height / 4)))
             card.respondToSwipe(like: translation.y > 0, opacity: opacity)
             
             if gesture.state == .ended {
