@@ -48,8 +48,8 @@ class ViewController: UIViewController {
 /// Example implementation of the data protocol, a representation of the data you wish to swipe in the stack, ex. users, concerts etc.
 /// This will be the data return by a successful swipe.
 class ExampleData: SwipableData {
-    func getView() -> SwipableView {
-        let view = ExampleCard()
+    func getView(with frame: CGRect) -> SwipableView {
+        let view = ExampleCard(frame: frame)
         view.setData(self)
         return view
     }

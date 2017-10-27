@@ -81,7 +81,7 @@ public class SwipeView: UIView {
      - parameter data: The data the new card represents.
      */
     public func addCardToTop(_ data: SwipableData) {
-        let renderedCard = renderCard(data.getView())
+        let renderedCard = renderCard(data.getView(with: frame))
         renderedCards.insert(renderedCard, at: 0)
         addSubview(renderedCard)
         bringSubview(toFront: renderedCard)
@@ -136,7 +136,7 @@ public class SwipeView: UIView {
      Fills the card stack by rendering new cards from the dataset if needed.
      */
     private func fillStack() {
-        let card = renderCard(dataset.removeFirst().getView())
+        let card = renderCard(dataset.removeFirst().getView(with: frame))
         self.renderedCards.append(card)
         if self.renderedCards.count < options.maxRenderedCards, !dataset.isEmpty {
             fillStack()
