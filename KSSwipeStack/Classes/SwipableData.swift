@@ -15,5 +15,5 @@ public protocol SwipableData {
     /**
      - returns: The view to be rendered in the card stack representing this piece of data.
      */
-    func getView() -> SwipableView
+    func getView(with frame: CGRect) -> SwipableView
 }

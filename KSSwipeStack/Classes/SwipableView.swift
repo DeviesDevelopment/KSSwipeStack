@@ -15,8 +15,6 @@ open class SwipableView: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        self.frame = UIScreen.main.bounds
     }
     
     required public init?(coder aDecoder: NSCoder) {

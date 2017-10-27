@@ -93,8 +93,8 @@ class ExampleCard: SwipableView {
 ### Create a simple data model implementing the protocol [SwipableData](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipableData.swift). 
 The protocol contains only one method, getView, in which you need to return a [SwipableView](https://github.com/Kicksort/KSSwipeStack/KSSwipeStack/Classes/SwipableView.swift).
 ```swift
-func getView() -> SwipableView {
-    let view = ExampleCard()
+func getView(with frame: CGRect) -> SwipableView {
+    let view = ExampleCard(frame: frame)
     view.setData(self)
     return view
 }
