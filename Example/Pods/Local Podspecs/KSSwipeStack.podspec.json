@@ -1,6 +1,6 @@
 {
   "name": "KSSwipeStack",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "summary": "A Swift card swiping library created by Kicksort Consulting AB",
   "description": "KSSwipeStack is a lightweight card swiping library for iOS written in Swift. \n\nKSSwipeStack handles any data model and the design/layout of the swipe cards are completely customizable.\n\nUsing the options provided you can customize the behavior and animations used in the swipe stack.\n\nDOCS: https://github.com/Kicksort/KSSwipeStack",
   "homepage": "https://github.com/Kicksort/KSSwipeStack",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/kicksort/KSSwipeStack.git",
-    "tag": "0.2.0"
+    "tag": "0.3.1"
   },
   "platforms": {
     "ios": "8.0"
