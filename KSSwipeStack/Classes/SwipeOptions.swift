@@ -15,7 +15,6 @@ public struct SwipeOptions {
     public var allowVerticalSwipes = false
     public var horizontalPanThreshold = CGFloat(0.5)
     public var verticalPanThreshold = CGFloat(0.5)
-    public var screenSize: CGSize = UIScreen.main.bounds.size
     public var visibleImageOrigin = CGPoint(x: 0, y: 0)
     public var allowUndo = true
     public var maxRenderedCards = 5

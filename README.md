@@ -146,7 +146,6 @@ public struct SwipeOptions {
     public var allowVerticalSwipes = false
     public var horizontalPanThreshold = CGFloat(0.5)
     public var verticalPanThreshold = CGFloat(0.5)
-    public var screenSize: CGSize = UIScreen.main.bounds.size
     public var visibleImageOrigin = CGPoint(x: 0, y: 0)
     public var allowUndo = true
     public var maxRenderedCards = 5
@@ -176,10 +175,6 @@ public var allowVerticalSwipe = false
 X-axis threshold for if a card is dismissed upon release.
 ```swift
 public var horizontalPanThreshold = CGFloat(0.5)
-```
-Size of the view containing the SwipeView
-```swift
-public var screenSize: CGSize = UIScreen.main.bounds.size
 ```
 Origin of a card in the 'original' state.
 ```swift

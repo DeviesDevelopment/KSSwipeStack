@@ -10,9 +10,14 @@ import Foundation
 import UIKit
 
 class SwipeHelper {
-    private let screenSize: CGSize = UIScreen.main.bounds.size
-    private let screenCenter = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
+    private let swipeViewSize: CGSize
+    private let swipeViewCenter: CGPoint
     open var options = SwipeOptions()
+    
+    init(with frame: CGRect) {
+        swipeViewSize = frame.size
+        swipeViewCenter = CGPoint(x: frame.width / 2, y: frame.height / 2)
+    }
   
     /// Move and animate a view to a desired position
     ///
@@ -53,7 +58,7 @@ class SwipeHelper {
         let rotation = self.calculateRotationAnimation(cardCenter: toPoint)
         let scale = self.calculateScaleAnimation(cardCenter: toPoint)
         
-        card.respondToSwipe(like: toPoint.x > 0, opacity: toPoint.equalTo(screenCenter) ? 0.0 : 1.0)
+        card.respondToSwipe(like: toPoint.x > 0, opacity: toPoint.equalTo(swipeViewCenter) ? 0.0 : 1.0)
         UIView.animate(withDuration: options.dismissAnimationDuration, delay: 0, options: UIViewAnimationOptions.curveLinear, animations: {
             card.center = toPoint
             card.layer.transform = CATransform3DConcat(rotation, scale)
@@ -135,7 +140,7 @@ class SwipeHelper {
     }
     
     private func calculateRotationAnimation(cardCenter: CGPoint) -> CATransform3D {
-        let xFromCenter = Double(cardCenter.x - self.screenSize.width / 2)
+        let xFromCenter = Double(cardCenter.x - swipeViewSize.width / 2)
         var rads = CGFloat(xFromCenter/10.0 * .pi / 180.0)
         if abs(rads) > 1.4 {
             rads = -rads
@@ -148,7 +153,7 @@ class SwipeHelper {
     /// - Parameter cardCenter: A positonal coordinate, preferably the center of a view.
     /// - Returns: The horizontal distance from the center of the screen
     private func calculateHorizontalDistanceFromCenter(_ cardCenter: CGPoint) -> Double {
-        return Double(abs(cardCenter.x - self.screenSize.width / 2))
+        return Double(abs(cardCenter.x - swipeViewSize.width / 2))
     }
     
     /// Calculates the distance in the vertical plane from the position of a view to the center of the screen
@@ -156,7 +161,7 @@ class SwipeHelper {
     /// - Parameter cardCenter: A positonal coordinate, preferably the center of a view.
     /// - Returns: The vertical distance from the center of the screen
     private func calculateVerticalDistanceFromCenter(_ cardCenter: CGPoint) -> Double {
-        return Double(abs(cardCenter.y - self.screenSize.height / 2))
+        return Double(abs(cardCenter.y - swipeViewSize.height / 2))
     }
     
     /// Calculate a proper destination for a dismissal of a view based on its position
@@ -164,11 +169,11 @@ class SwipeHelper {
     /// - Parameter card: View which endpoint to calculate
     /// - Returns: Proper destination for the view
     func calculateEndpoint(_ card: UIView) -> CGPoint {
-        let deltaX = card.center.x - screenSize.width / 2
-        let deltaY = card.center.y - screenSize.height / 2
+        let deltaX = card.center.x - swipeViewSize.width / 2
+        let deltaY = card.center.y - swipeViewSize.height / 2
         
         let k = deltaY / deltaX
-        let toX = deltaX < 0 ? -screenSize.height / 2 : screenSize.width + screenSize.height / 2
+        let toX = deltaX < 0 ? -swipeViewSize.height / 2 : swipeViewSize.width + swipeViewSize.height / 2
         return CGPoint(x: toX, y: toX * k)
     }
     
@@ -179,7 +184,7 @@ class SwipeHelper {
     /// - Returns: Proper destination for the view
     func calculateEndpoint(_ card: UIView, basedOn velocity: CGPoint) -> CGPoint {
         let k = velocity.y / velocity.x
-        let toX = velocity.x < 0 ? -screenSize.height / 2 : screenSize.width + screenSize.height / 2
+        let toX = velocity.x < 0 ? -swipeViewSize.height / 2 : swipeViewSize.width + swipeViewSize.height / 2
         return CGPoint(x: toX, y: toX * k)
     }
     
@@ -188,6 +193,6 @@ class SwipeHelper {
     /// - Parameter center: Position using origin as origo
     /// - Returns: Position with coordinates using center as origo
     func convertToCenter(origin: CGPoint) -> CGPoint {
-        return CGPoint(x: origin.x + screenSize.width / 2, y: origin.y + screenSize.height / 2)
+        return CGPoint(x: origin.x + swipeViewSize.width / 2, y: origin.y + swipeViewSize.height / 2)
     }
 }

@@ -12,7 +12,7 @@ import RxSwift
 /// Represents a swipable view to be rendered in the swipe stack. 
 /// The visual representation of a SwipeData object.
 public class SwipeView: UIView {
-    private var swipeHelper = SwipeHelper()
+    private lazy var swipeHelper = SwipeHelper(with: frame)
     private lazy var horizontalPan = PanDirectionGestureRecognizer(direction: .Horizontal, target: self, action: #selector(respondToHorizontalPan))
     private lazy var verticalPan = PanDirectionGestureRecognizer(direction: .Vertical, target: self, action: #selector(respondToVerticalPan))
     
@@ -81,7 +81,8 @@ public class SwipeView: UIView {
      - parameter data: The data the new card represents.
      */
     public func addCardToTop(_ data: SwipableData) {
-        let renderedCard = renderCard(data.getView(with: frame))
+        let cardFrame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        let renderedCard = renderCard(data.getView(with: cardFrame))
         renderedCards.insert(renderedCard, at: 0)
         addSubview(renderedCard)
         bringSubview(toFront: renderedCard)
@@ -136,7 +137,8 @@ public class SwipeView: UIView {
      Fills the card stack by rendering new cards from the dataset if needed.
      */
     private func fillStack() {
-        let card = renderCard(dataset.removeFirst().getView(with: frame))
+        let cardFrame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        let card = renderCard(dataset.removeFirst().getView(with: cardFrame))
         self.renderedCards.append(card)
         if self.renderedCards.count < options.maxRenderedCards, !dataset.isEmpty {
             fillStack()
@@ -184,15 +186,15 @@ public class SwipeView: UIView {
         if let card = getCurrentCard(){
             let previousOrigin = card.frame.origin
             let nextOrigin = CGPoint(x: self.frame.origin.x + translation.x, y: self.frame.origin.y + translation.y)
-            card.center = CGPoint(x: options.screenSize.width/2 + translation.x, y: options.screenSize.height/2 + translation.y)
+            card.center = CGPoint(x: frame.width/2 + translation.x, y: frame.height/2 + translation.y)
             swipeHelper.transformCard(card)
             
-            let opacity = abs(Float(card.center.x.distance(to: self.center.x) / (options.screenSize.width / 4)))
+            let opacity = abs(Float(card.center.x.distance(to: self.center.x) / (frame.width / 4)))
             card.respondToSwipe(like: translation.x > 0, opacity: opacity)
             
             if gesture.state == .ended {
                 let throwingThresholdExceeded = magnitude > options.throwingThreshold
-                let panThresholdExceeded = abs(nextOrigin.x) > options.screenSize.width * options.horizontalPanThreshold
+                let panThresholdExceeded = abs(nextOrigin.x) > frame.width * options.horizontalPanThreshold
                 if throwingThresholdExceeded {
                     if velocity.x > 0 {
                         respondToSwipe(.right, gesture: gesture)
@@ -225,15 +227,15 @@ public class SwipeView: UIView {
         if let card = getCurrentCard(){
             let previousOrigin = card.frame.origin
             let nextOrigin = CGPoint(x: self.frame.origin.x + translation.x, y: self.frame.origin.y + translation.y)
-            card.center = CGPoint(x: options.screenSize.width/2 + translation.x, y: options.screenSize.height/2 + translation.y)
+            card.center = CGPoint(x: frame.width/2 + translation.x, y: frame.height/2 + translation.y)
             swipeHelper.transformCard(card)
             
-            let opacity = abs(Float(card.center.y.distance(to: self.center.y) / (options.screenSize.height / 4)))
+            let opacity = abs(Float(card.center.y.distance(to: self.center.y) / (frame.height / 4)))
             card.respondToSwipe(like: translation.y > 0, opacity: opacity)
             
             if gesture.state == .ended {
                 let throwingThresholdExceeded = magnitude > options.throwingThreshold
-                let panThresholdExceeded = abs(nextOrigin.y) > options.screenSize.height * options.verticalPanThreshold
+                let panThresholdExceeded = abs(nextOrigin.y) > frame.height * options.verticalPanThreshold
                 if throwingThresholdExceeded {
                     if velocity.y > 0 {
                         respondToSwipe(.down, gesture: gesture)
@@ -323,7 +325,7 @@ public class SwipeView: UIView {
         if options.allowHorizontalSwipes && !options.allowVerticalSwipes {
             // Special case to better handle rapid flicks
             if !(card.frame.origin.x == 0 && card.frame.origin.y == 0) {
-                if card.center.x > options.screenSize.width / 2 {
+                if card.center.x > frame.width / 2 {
                     toPoint = swipeHelper.calculateEndpoint(card)
                 } else if let gesture = gesture as? UIPanGestureRecognizer{
                     let velocity = gesture.velocity(in: self)
