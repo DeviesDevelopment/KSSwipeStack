@@ -136,6 +136,16 @@ extension ViewController: SwipeDelegate {
 }
 ```
 
+## Extras
+
+### Undo swipe
+Call the `undoSwipe()` method in order to move the latest swiped card back to the stack. You can call the method any number of times in order to go back additional steps through the swipe history. Note that this feature can be disabled by setting `allowUndo` in SwipeOptions to false.
+```swift
+swipeView.undoSwipe()
+```
+
+If you want to prevent a specific card from being added to the swipe history (and therefore skipped when calling `undoSwipe()`), you should override `isUndoable()` for that SwipableView and return false.
+
 ## Options
 Using the SwipeOptions struct you can modify the behavior ot the swipe stack.
 ```swift
