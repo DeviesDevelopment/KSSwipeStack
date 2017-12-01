@@ -67,6 +67,6 @@ open class SwipableView: UIView {
      Should return whether or not the user is to be allowed to undo swiping this card.
      */
     open func isUndoable() -> Bool {
-        return false
+        return true
     }
 }
