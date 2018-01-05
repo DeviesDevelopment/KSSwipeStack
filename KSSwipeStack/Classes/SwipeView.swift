@@ -294,7 +294,7 @@ public class SwipeView: UIView {
     /// - Parameters:
     ///   - direction: The direction in which the view was swiped
     ///   - gesture: The gesture generating the swipe
-    func respondToSwipe(_ direction: SwipeDirection, gesture: UIGestureRecognizer) {
+    open func respondToSwipe(_ direction: SwipeDirection, gesture: UIGestureRecognizer? = nil) {
         guard let card = getCurrentCard() else {
             // TODO
             return
