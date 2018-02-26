@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'KSSwipeStack'
-  s.version          = '0.4.2'
+  s.version          = '0.4.3'
   s.summary          = 'A Swift card swiping library created by Kicksort Consulting AB'
 
 # This description is used to generate tags and improve search results.
@@ -34,6 +34,7 @@ DOCS: https://github.com/Kicksort/KSSwipeStack
   s.source           = { :git => 'https://github.com/kicksort/KSSwipeStack.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
+  s.swift_version = '4.0'
 
   s.source_files = 'KSSwipeStack/Classes/**/*'
   

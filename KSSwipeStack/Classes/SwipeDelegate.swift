@@ -15,4 +15,4 @@ public protocol SwipeDelegate {
      - parameter swipe: The swipe which just occured.
      */
     func onNext(_ swipe: Swipe)
- }
+}

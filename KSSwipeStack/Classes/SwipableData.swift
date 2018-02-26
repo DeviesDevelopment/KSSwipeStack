@@ -9,7 +9,7 @@
 import Foundation
 
 /**
-Protocol which must be implemented by all data models meant to be swiped in the card stack.
+ Protocol which must be implemented by all data models meant to be swiped in the card stack.
  */
 public protocol SwipableData {
     /**

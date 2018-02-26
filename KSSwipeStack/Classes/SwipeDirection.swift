@@ -13,7 +13,7 @@ public enum SwipeDirection {
     case right
     case up
     case down
-    
+
     func getSwipeEndpoint() -> CGPoint {
         switch self {
         case .left:
