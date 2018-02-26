@@ -18,20 +18,20 @@ public enum PanDirection {
 
 public class PanDirectionGestureRecognizer: UIPanGestureRecognizer {
     let direction: PanDirection
-    
+
     init(direction: PanDirection, target: AnyObject, action: Selector) {
         self.direction = direction
         super.init(target: target, action: action)
     }
-    
-    override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+
+    public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesMoved(touches, with: event)
-        
+
         if state == .began {
             guard let view = self.view else {
                 return
             }
-            
+
             let v = velocity(in: view)
             switch direction {
             case .Horizontal where fabs(v.y) > fabs(v.x):

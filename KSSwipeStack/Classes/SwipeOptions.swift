@@ -21,6 +21,6 @@ public struct SwipeOptions {
     public var refillThreshold = 10
     public var dismissAnimationDuration = 0.25
     public var freezeWhenDismissing = false
-    
-    public init(){}
+
+    public init() {}
 }
