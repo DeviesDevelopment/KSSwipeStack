@@ -59,7 +59,7 @@ class SwipeHelper {
         let rotation = calculateRotationAnimation(cardCenter: toPoint)
         let scale = calculateScaleAnimation(cardCenter: toPoint)
 
-        card.respondToSwipe(like: toPoint.x > 0, opacity: toPoint.equalTo(swipeViewCenter) ? 0.0 : 1.0)
+        card.respondToSwipe(direction: getDirection(toPoint: toPoint), distance: toPoint.equalTo(swipeViewCenter) ? 0.0 : 1.0)
         UIView.animate(withDuration: options.dismissAnimationDuration, delay: 0, options: UIViewAnimationOptions.curveLinear, animations: {
             card.center = toPoint
             card.layer.transform = CATransform3DConcat(rotation, scale)
@@ -67,6 +67,14 @@ class SwipeHelper {
         }, completion: { _ in
             completion()
         })
+    }
+    
+    func getDirection(toPoint: CGPoint) -> SwipeDirection {
+        if abs(toPoint.x) > abs(toPoint.y) {
+            return toPoint.x > 0 ? .right : .left
+        }
+        
+        return toPoint.y > 0 ? .down : .up
     }
 
     /// Calculate the magnitude if a throw based on the velocity vector

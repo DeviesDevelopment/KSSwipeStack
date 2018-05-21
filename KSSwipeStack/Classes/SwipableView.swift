@@ -22,15 +22,29 @@ open class SwipableView: UIView {
     }
 
     /**
+     * Is fired when the view is being moved within the stack.
+     * ## You can here change the visuals of the view based on:
+     *   - Whether or not the card is being swiped to the right (liked) or (disliked)
+     *   - The requested opacity of any overlays the view might have, based on the x-position of the view.
+     *
+     * - parameter like: true for like (right) and false for dislike (left)
+     * - parameter opacity: the requested opacity of overlays. Based on x-position
+     */
+    @available(*, deprecated, message: "use respondToSwipe(direction: SwipeDirection, distance: Float) instead")
+    open func respondToSwipe(like: Bool, opacity: Float) {
+    }
+    
+    /**
      Is fired when the view is being moved within the stack.
      ## You can here change the visuals of the view based on:
-        - Whether or not the card is being swiped to the right (liked) or (disliked)
-        - The requested opacity of any overlays the view might have, based on the x-position of the view.
-
-     - parameter like: true for like (right) and false for dislike (left)
-     - parameter opacity: the requested opacity of overlays. Based on x-position
+     - Which direction the card was swiped
+     - How far the card has been swiped from the center of the screen
+     
+     - parameter direction: the SwipeDirection in which the card was swiped
+     - parameter distance: how far away from the center of the sceen the card has been swiped
      */
-    open func respondToSwipe(like: Bool, opacity: Float) {
+    open func respondToSwipe(direction: SwipeDirection, distance: Float) {
+        respondToSwipe(like: direction == .right, opacity: distance)
     }
 
     /**
