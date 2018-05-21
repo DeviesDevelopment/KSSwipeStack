@@ -16,7 +16,7 @@ struct SwipeHistoryItem {
 
 /// Represents a swipable view to be rendered in the swipe stack.
 /// The visual representation of a SwipeData object.
-public class SwipeView: UIView {
+open class SwipeView: UIView {
     private lazy var swipeHelper = SwipeHelper(with: frame)
     private lazy var horizontalPan = PanDirectionGestureRecognizer(direction: .Horizontal, target: self, action: #selector(respondToHorizontalPan))
     private lazy var verticalPan = PanDirectionGestureRecognizer(direction: .Vertical, target: self, action: #selector(respondToVerticalPan))
@@ -150,7 +150,7 @@ public class SwipeView: UIView {
      Fetch the card currently visible at the top of the stack.
      - returns: The top card (the currently visible) in the stack.
      */
-    fileprivate func getCurrentCard() -> SwipableView? {
+    open func getCurrentCard() -> SwipableView? {
         return renderedCards.first
     }
 
@@ -249,7 +249,7 @@ public class SwipeView: UIView {
     /// Handles vertical pan gestures (drags) in the view
     ///
     /// - Parameter gesture: the gesture itself
-    @objc func respondToVerticalPan(gesture: UIPanGestureRecognizer) {
+    @objc open func respondToVerticalPan(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self)
         let velocity = gesture.velocity(in: self)
         let magnitude = swipeHelper.calculateThrowMagnitude(for: velocity)
@@ -321,6 +321,14 @@ public class SwipeView: UIView {
         if let currentCard = getCurrentCard() {
             swipeHelper.resetCard(currentCard)
             swipeHelper.move(currentCard, duration: options.snapDuration, toPoint: options.visibleImageOrigin)
+            currentCard.resetView()
+        }
+    }
+    
+    open func snap(to point: CGPoint) {
+        if let currentCard = getCurrentCard() {
+            swipeHelper.resetScaleAndRotation(for: currentCard)
+            swipeHelper.move(currentCard, duration: options.snapDuration, toPoint: point)
             currentCard.resetView()
         }
     }

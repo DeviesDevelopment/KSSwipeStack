@@ -83,9 +83,6 @@ class SwipeHelper {
     /// Animates the reset of the view
     /// - Parameter card: View to reset
     func resetCard(_ card: UIView) {
-        let rotation = CATransform3DMakeRotation(0, 0, 0, 1)
-        let scale = CATransform3DMakeScale(1.0, 1.0, 1.0)
-
         let borderAnim = CABasicAnimation(keyPath: "borderWidth")
         borderAnim.fromValue = card.layer.borderWidth
         borderAnim.toValue = 0
@@ -105,6 +102,13 @@ class SwipeHelper {
 
         card.layer.add(both, forKey: "both")
 
+        resetScaleAndRotation(for: card)
+    }
+    
+    func resetScaleAndRotation(for card: UIView) {
+        let rotation = CATransform3DMakeRotation(0, 0, 0, 1)
+        let scale = CATransform3DMakeScale(1.0, 1.0, 1.0)
+        
         UIView.animate(withDuration: 0.1) {
             card.layer.transform = CATransform3DConcat(rotation, scale)
         }

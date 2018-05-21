@@ -15,7 +15,7 @@ import RxSwift
 /// It then generates 15 items of example data and adds them to the SwipeView
 class ViewController: UIViewController {
     
-    @IBOutlet var swipeView: SwipeView!
+    @IBOutlet var swipeView: CustomSwipeView!
     
     private var disposableBag = DisposeBag()
     
@@ -45,6 +45,29 @@ class ViewController: UIViewController {
     }
 }
 
+class CustomSwipeView: SwipeView {
+    @objc override func respondToVerticalPan(gesture: UIPanGestureRecognizer) {
+        guard let currentCard = getCurrentCard() as? ExampleCard else {
+            return super.respondToVerticalPan(gesture: gesture)
+        }
+        
+        guard gesture.state == .ended else {
+            return super.respondToVerticalPan(gesture: gesture)
+        }
+        
+        let translation = gesture.translation(in: self)
+        let nextOrigin = CGPoint(x: self.frame.origin.x + translation.x, y: self.frame.origin.y + translation.y)
+        
+        if !currentCard.pulledDown && abs(nextOrigin.y) > frame.height * CGFloat(0.1) {
+            snap(to: CGPoint(x: 0, y: 100))
+            currentCard.pulledDown = true
+        } else {
+            currentCard.pulledDown = false
+            super.respondToVerticalPan(gesture: gesture)
+        }
+    }
+}
+
 /// Example implementation of the data protocol, a representation of the data you wish to swipe in the stack, ex. users, concerts etc.
 /// This will be the data return by a successful swipe.
 class ExampleData: SwipableData {
@@ -58,7 +81,8 @@ class ExampleData: SwipableData {
 /// The visual representation of the ExampleData, the view which is rendered in the stack to represent a piece of data.
 ///
 class ExampleCard: SwipableView {
-
+    var pulledDown = false
+    
     override func setData(_ data: SwipableData) {
         super.setData(data)
         backgroundColor = .kicksortGray
