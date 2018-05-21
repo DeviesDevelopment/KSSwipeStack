@@ -219,8 +219,8 @@ public class SwipeView: UIView {
             card.center = CGPoint(x: frame.width / 2 + translation.x, y: frame.height / 2 + translation.y)
             swipeHelper.transformCard(card)
 
-            let opacity = abs(Float(card.center.x.distance(to: self.center.x) / (frame.width / 4)))
-            card.respondToSwipe(like: translation.x > 0, opacity: opacity)
+            let distance = abs(Float(card.center.x.distance(to: self.center.x) / (frame.width / 4)))
+            card.respondToSwipe(direction: translation.x > 0 ? .right : .left, distance: distance)
 
             if gesture.state == .ended {
                 let throwingThresholdExceeded = magnitude > options.throwingThreshold
@@ -260,8 +260,8 @@ public class SwipeView: UIView {
             card.center = CGPoint(x: frame.width / 2 + translation.x, y: frame.height / 2 + translation.y)
             swipeHelper.transformCard(card)
 
-            let opacity = abs(Float(card.center.y.distance(to: self.center.y) / (frame.height / 4)))
-            card.respondToSwipe(like: translation.y > 0, opacity: opacity)
+            let distance = abs(Float(card.center.y.distance(to: self.center.y) / (frame.height / 4)))
+            card.respondToSwipe(direction: translation.y > 0 ? .down : .up, distance: distance)
 
             if gesture.state == .ended {
                 let throwingThresholdExceeded = magnitude > options.throwingThreshold
